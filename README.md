@@ -1,8 +1,8 @@
 # tiny_trigger
-A trigger word or wake word detection tiny enough to run on an MCU.
+A trigger word or wake word detection tiny enough to run on an MCU. The board used here, is the [Arduino Nano 33 BLE](https://store.arduino.cc/products/arduino-nano-33-ble).
 
 # Structure
-In the `cc_src` directory, all necessary c++ code is stored. Most code is from the [tensorflow repository](https://github.com/tensorflow/tensorflow/tree/be4f6874533d78f662d9777b66abe3cdde98f901/tensorflow/lite/experimental/micro) for micro controllers.
+I have forked the [tflite-micro]( https://github.com/tensorflow/tflite-micro-arduino-examples.git) into this repository. Operations needed to run models on the device.
 # Model
 ## Training
 ## Model transformation
