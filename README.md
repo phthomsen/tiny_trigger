@@ -1,4 +1,6 @@
 # tiny_trigger
+python version: ...
+
 A trigger word or wake word detection tiny enough to run on an MCU. The board used here, is the [Arduino Nano 33 BLE](https://store.arduino.cc/products/arduino-nano-33-ble).
 
 # Structure
