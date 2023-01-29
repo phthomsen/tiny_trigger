@@ -1,5 +1,9 @@
 # tiny_trigger
-python version: 3.9.x
+
+## Environment
+I'm developing locally on a Macbook Air M1.
+MacOs: Ventura 13.1
+python version: 3.9.13
 
 A trigger word or wake word detection tiny enough to run on an MCU. The board used here, is the [Arduino Nano 33 BLE](https://store.arduino.cc/products/arduino-nano-33-ble).
 
