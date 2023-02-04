@@ -122,6 +122,7 @@ tinycss2==1.2.1
 torch==1.13.1
 torchaudio==0.13.1
 tornado==6.2
+tqdm==4.64.1
 traitlets==5.8.0
 typeguard==2.13.3
 typing_extensions==4.4.0
