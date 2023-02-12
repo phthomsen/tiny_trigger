@@ -18,3 +18,7 @@ To individualize the model, I recorded voice samples of friends and me saying th
 ## Model transformation
 # Application
 # Deployment
+
+
+# Debugging hints
+If you want to connect to your board and the correct serial port doesn't show up, you might be using a micro usb cabel that doesn't support data transfer. Sounds simple, but cost me an hour :D
