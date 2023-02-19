@@ -5,7 +5,7 @@ import librosa
 # when using the dataset from torch, this has already been done.
 
 # # Load the audio file
-# sample_rate, audio_data = wavfile.read('audio_file.wav')
+sample_rate, audio_data = wavfile.read('audio_file.wav')
 
 # # Apply the same preprocessing steps as the TensorFlow code
 # audio_samples = audio_data.astype(np.float32)
