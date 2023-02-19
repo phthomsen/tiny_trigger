@@ -2,22 +2,25 @@ import numpy as np
 import scipy.io.wavfile as wavfile
 import librosa
 
-# Load the audio file
-sample_rate, audio_data = wavfile.read('audio_file.wav')
+# when using the dataset from torch, this has already been done.
 
-# Apply the same preprocessing steps as the TensorFlow code
-audio_samples = audio_data.astype(np.float32)
-audio_samples /= 32768.0
+# # Load the audio file
+# sample_rate, audio_data = wavfile.read('audio_file.wav')
 
-# Resample the audio data to the desired sample rate
-resampled_audio_data = librosa.resample(audio_samples, sample_rate, 16000)
+# # Apply the same preprocessing steps as the TensorFlow code
+# audio_samples = audio_data.astype(np.float32)
+# audio_samples /= 32768.0
+
+# # Resample the audio data to the desired sample rate
+# resampled_audio_data = librosa.resample(audio_samples, sample_rate, 16000)
 
 # Apply a pre-emphasis filter to the audio data
 pre_emphasis = 0.97
-emphasized_audio_data = np.append(resampled_audio_data[0], resampled_audio_data[1:] - pre_emphasis * resampled_audio_data[:-1])
+emphasized_audio_data = np.append(audio_data[0], audio_data[1:] - pre_emphasis * audio_data[:-1])
 
 # Convert the audio data to a spectrogram
-spectrogram = np.abs(librosa.stft(emphasized_audio_data, n_fft=640, hop_length=320))
+# in the original preprocessing it's set to 480 and hop_l to 160, but cgpt suggests to use 640 and 320
+spectrogram = np.abs(librosa.stft(emphasized_audio_data, n_fft=480, hop_length=160))
 
 # Apply the microfrontend preprocessing method
 window_size_ms = 30.0
@@ -26,12 +29,14 @@ feature_bin_count = 40
 dct_coefficient_count = 10
 lower_frequency_limit = 20
 upper_frequency_limit = 4000
+sample_rate = 16000
 
 # Apply the window function to the spectrogram
 window_length_samples = int(round(window_size_ms * sample_rate / 1000))
 window_stride_samples = int(round(window_stride_ms * sample_rate / 1000))
 window = np.hanning(window_length_samples)
 num_frames = 1 + int(np.floor((spectrogram.shape[1] - window_length_samples) / window_stride_samples))
+# set up the array
 mfccs = np.zeros((num_frames, dct_coefficient_count))
 
 for frame in range(num_frames):
@@ -47,6 +52,7 @@ for frame in range(num_frames):
         fmin=lower_frequency_limit,
         fmax=upper_frequency_limit
     )
+    # Mel-Frequency Cepstral Coefficients.
     mfccs[frame, :] = mfcc
 
 # Quantize the MFCC data
