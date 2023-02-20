@@ -8,7 +8,7 @@ class PreProcessor(object):
         # one of ['torch_dataset', 'self_captured']
         self.dataset_type = dataset_type
 
-    def load_and_normalize():
+    def load_and_normalize(self):
         # Load the audio file
         sample_rate, audio_data = wavfile.read('audio_file.wav')
 
@@ -21,7 +21,11 @@ class PreProcessor(object):
         
         return resampled_audio_data
     
-    def create_spectrogram(audio_data):
+    def create_spectrogram(self, audio_data=None):
+        # if we have the torch dataset, we pass the data directly
+        if self.dataset_type == "self_captured":
+            audio_data = self.load_and_normalize
+        
         # Apply a pre-emphasis filter to the audio data
         pre_emphasis = 0.97
         emphasized_audio_data = np.append(audio_data[0], audio_data[1:] - pre_emphasis * audio_data[:-1])
@@ -33,7 +37,7 @@ class PreProcessor(object):
         # Apply the microfrontend preprocessing method
         window_size_ms = 30.0
         window_stride_ms = 20.0
-        feature_bin_count = 40
+        # feature_bin_count = 40
         dct_coefficient_count = 10
         lower_frequency_limit = 20
         upper_frequency_limit = 4000
@@ -57,8 +61,8 @@ class PreProcessor(object):
                 S=windowed_spec,
                 sr=sample_rate,
                 n_mfcc=dct_coefficient_count,
-                n_fft=640,
-                hop_length=320,
+                n_fft=480,
+                hop_length=180,
                 fmin=lower_frequency_limit,
                 fmax=upper_frequency_limit
             )
