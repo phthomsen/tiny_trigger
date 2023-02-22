@@ -39,8 +39,8 @@ class PreProcessor(object):
         window_stride_ms = 20.0
         # feature_bin_count = 40
         dct_coefficient_count = 10
-        lower_frequency_limit = 20
-        upper_frequency_limit = 4000
+        lower_frequency_limit = 10
+        upper_frequency_limit = 8000
         sample_rate = 16000
 
         # Apply the window function to the spectrogram
