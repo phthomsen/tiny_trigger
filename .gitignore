@@ -3,4 +3,6 @@ data/
 .DS_Store
 .ipynb_checkpoints/
 .vscode/
+.tiny/*
+src/dataset/
 .python-version
