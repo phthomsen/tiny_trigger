@@ -6,3 +6,4 @@ data/
 .tiny/*
 src/dataset/
 .python-version
+SpeechCommands.tar.gz
