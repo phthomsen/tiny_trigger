@@ -67,8 +67,10 @@ def main():
             time_shift=TIME_SHIFT_MS,
             mode='testing',
             sess=sess)
+
     test_dic = {test_data[i]: test_labels[i] for i in range(len(test_data))}
     with open('../data/') 
+
     with tf.compat.v1.Session() as sess:
         train_data, train_labels = audio_processor.get_data(
             how_many=-1,
