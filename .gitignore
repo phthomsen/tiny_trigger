@@ -1,3 +1,4 @@
+src/tensorflow/
 data/
 .venv/*
 .DS_Store
