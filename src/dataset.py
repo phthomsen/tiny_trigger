@@ -88,18 +88,18 @@ class FrankenSteinDataSet(Dataset):
         return self._data[idx], self._labels[idx]
 
 
-def main():
-    dataset = FrankenSteinDataSet("training")
-    loader = DataLoader(dataset, batch_size=8, shuffle=True)
+# def main():
+#     dataset = FrankenSteinDataSet("training")
+#     loader = DataLoader(dataset, batch_size=8, shuffle=True)
 
-    for data, label in loader:
-        print(f"dtype of data is {type(data)}")
-        print(f"shape of data is {data.shape}")
-        print(f"data looks like this: {data}")
+#     for data, label in loader:
+#         print(f"dtype of data is {type(data)}")
+#         print(f"shape of data is {data.shape}")
+#         print(f"data looks like this: {data}")
 
-        break
+#         break
 
-    logger.info("DONE")
+#     logger.info("DONE")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
