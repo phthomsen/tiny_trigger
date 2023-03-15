@@ -1,4 +1,4 @@
-src/tensorflow/
+src/tensorflow/*
 data/
 .venv/*
 .DS_Store
