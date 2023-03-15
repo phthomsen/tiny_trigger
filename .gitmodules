@@ -1,3 +1,4 @@
 [submodule "tflite-micro-arduino-examples"]
 	path = tflite-micro-arduino-examples
 	url = https://github.com/pthomsen-ml/tflite-micro-arduino-examples.git
+    branch = main
