@@ -8,10 +8,21 @@ a dataloader object to be more lazy and memory efficient.
 
 import tensorflow as tf
 import sys
-sys.path.append("tensorflow/tensorflow/examples/speech_commands/")
-import input_data
-import models
+import os
+try:
+    sys.path.append("tensorflow/tensorflow/examples/speech_commands/")
+    import input_data
+    import models
+except ModuleNotFoundError:
+    logging.warning("tensorflow not found, need to clone it first")
+    os.system("git clone https://github.com/tensorflow/tensorflow.git")
+    import input_data
+    import models
 from torch.utils.data import DataLoader, Dataset
+import logging
+
+logging.basicConfig(level = logging.DEBUG)
+logger = logging.getLogger()
 
 
 class FrankenSteinDataSet(Dataset):
@@ -19,8 +30,6 @@ class FrankenSteinDataSet(Dataset):
     Our dataset is created with tensorflow functionality, but will yield a pytorch Dataset to train a torch model.
     """
     def __init__(self, mode):
-        mode = mode
-        # variables needed for configuration
         PREPROCESS = 'micro'
         WINDOW_STRIDE = 20
         WANTED_WORDS = "yes,no"
@@ -47,7 +56,8 @@ class FrankenSteinDataSet(Dataset):
         equal_percentage_of_training_samples = int(100.0/(number_of_total_labels))
         SILENT_PERCENTAGE = equal_percentage_of_training_samples
         UNKNOWN_PERCENTAGE = equal_percentage_of_training_samples    
-
+        
+        logger.info("initializing the tensorflow Audio processor and process data.")
         model_settings = models.prepare_model_settings(
             len(input_data.prepare_words_list(WANTED_WORDS.split(','))),
             SAMPLE_RATE, CLIP_DURATION_MS, WINDOW_SIZE_MS,
@@ -60,7 +70,7 @@ class FrankenSteinDataSet(Dataset):
             TESTING_PERCENTAGE, model_settings, LOGS_DIR)
         
         with tf.compat.v1.Session() as sess:
-            _data, _labels = audio_processor.get_data(
+            self._data, self._labels = audio_processor.get_data(
                 how_many=-1,
                 offset=0,
                 model_settings=model_settings,
@@ -73,45 +83,23 @@ class FrankenSteinDataSet(Dataset):
     def __len__(self):
         return len(self._labels)
     
-    def to_torch(self):
-        
     def __getitem__(self, idx):
-        return 
+        # this already gives us torch tensors
+        return self._data[idx], self._labels[idx]
 
 
 def main():
-    # create test data and write to disk
-    with tf.compat.v1.Session() as sess:
-        test_data, test_labels = audio_processor.get_data(
-            how_many=-1,
-            offset=0,
-            model_settings=model_settings,
-            background_frequency=BACKGROUND_FREQUENCY,
-            background_volume_range=BACKGROUND_VOLUME_RANGE,
-            time_shift=TIME_SHIFT_MS,
-            mode='testing',
-            sess=sess)
+    dataset = FrankenSteinDataSet("training")
+    loader = DataLoader(dataset, batch_size=8, shuffle=True)
 
-    test_dic = {test_data[i]: test_labels[i] for i in range(len(test_data))}
+    for data, label in loader:
+        print(f"dtype of data is {type(data)}")
+        print(f"shape of data is {data.shape}")
+        print(f"data looks like this: {data}")
 
-    with tf.compat.v1.Session() as sess:
-        train_data, train_labels = audio_processor.get_data(
-            how_many=-1,
-            offset=0,
-            model_settings=model_settings,
-            background_frequency=BACKGROUND_FREQUENCY,
-            background_volume_range=BACKGROUND_VOLUME_RANGE,
-            time_shift=TIME_SHIFT_MS,
-            mode='training',
-            sess=sess)
-        
-    with tf.compat.v1.Session() as sess:
-        train_data, train_labels = audio_processor.get_data(
-            how_many=-1,
-            offset=0,
-            model_settings=model_settings,
-            background_frequency=BACKGROUND_FREQUENCY,
-            background_volume_range=BACKGROUND_VOLUME_RANGE,
-            time_shift=TIME_SHIFT_MS,
-            mode='training',
-            sess=sess)
+        break
+
+    logger.info("DONE")
+
+if __name__ == "__main__":
+    main()
