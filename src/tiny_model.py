@@ -28,6 +28,11 @@ import torch.nn.functional as F
           v
       [BiasAdd]<-(bias)
           v
+output shape of the model:
+[number of classes x 1]
+we just get the logits as output.
+
+input must be the 4d fingerprint
 """
 class tiny_conv(nn.Module):
     def __init__(self):
@@ -38,9 +43,9 @@ class tiny_conv(nn.Module):
         self.conv3 = nn.Conv2d()
         self.fc = nn.Linear()
 
-
-    
     def forward(self, x):
-        x = self.bla
-
+        # pool ??
+        x = F.relu(self.conv1(x))
+        
+        
         return x
