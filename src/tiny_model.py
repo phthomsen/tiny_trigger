@@ -46,6 +46,19 @@ class tiny_conv(nn.Module):
     def forward(self, x):
         # pool ??
         x = F.relu(self.conv1(x))
-        
+
         
         return x
+    
+
+class load_and_convert_model():
+    def __init__(self):
+        pass
+    def _load():
+        pass
+    def _convert():
+    
+    def _store
+
+
+def 

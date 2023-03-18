@@ -85,6 +85,8 @@ class FrankenSteinDataSet(Dataset):
     
     def __getitem__(self, idx):
         # this already gives us torch tensors
+
+        # take care of the shape
         return self._data[idx], self._labels[idx]
 
 
