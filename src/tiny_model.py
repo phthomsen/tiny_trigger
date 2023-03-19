@@ -4,19 +4,9 @@ import torch.nn.functional as F
 
 """
 
+  Here's the layout of the graph:
+
   (fingerprint_input)
-          v
-      [Conv2D]<-(weights)
-          v
-      [BiasAdd]<-(bias)
-          v
-        [Relu]
-          v
-      [Conv2D]<-(weights)
-          v
-      [BiasAdd]<-(bias)
-          v
-        [Relu]
           v
       [Conv2D]<-(weights)
           v
@@ -35,17 +25,27 @@ we just get the logits as output.
 input must be the 4d fingerprint
 """
 class tiny_conv(nn.Module):
-    def __init__(self):
+    def __init__(self, bs, classes, is_training):
+        self.bs = bs
+        self.classes = classes
+        self.is_training = is_training
         super(tiny_conv).__init__()
         # nSamples x nChannels x Height x Width
-        self.conv1 = nn.Conv2d()
-        self.conv2 = nn.Conv2d()
-        self.conv3 = nn.Conv2d()
-        self.fc = nn.Linear()
+        self.conv1 = nn.Conv2d(in_channels=1,
+                                out_channels=1, 
+                                kernel_size=(8,10), 
+                                padding="same")
+        self.fc2 = nn.Linear()
 
     def forward(self, x):
+        # input data comes with shape (1,49,40,1)
+        x.reshape(self.bs, 1, 49, 40)
         # pool ??
+        # dropout ??
         x = F.relu(self.conv1(x))
+        if self.is_training: 
+            x = F.dropout(x, p=0.5)
+        x = F.softmax(x)
 
         
         return x
