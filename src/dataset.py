@@ -6,23 +6,27 @@ The original training script loads the entire dataset into memory. What we do he
 a dataloader object to be more lazy and memory efficient.
 """
 
+import logging
+
+logging.basicConfig(level = logging.DEBUG)
+logger = logging.getLogger()
+
 import tensorflow as tf
 import sys
 import os
+print(os.curdir)
+print(os.system("pwd"))
 try:
     sys.path.append("tensorflow/tensorflow/examples/speech_commands/")
     import input_data
     import models
 except ModuleNotFoundError:
-    logging.warning("tensorflow not found, need to clone it first")
+    logger.warning("tensorflow not found, need to clone it first")
     os.system("git clone https://github.com/tensorflow/tensorflow.git")
     import input_data
     import models
 from torch.utils.data import DataLoader, Dataset
-import logging
 
-logging.basicConfig(level = logging.DEBUG)
-logger = logging.getLogger()
 
 
 class FrankenSteinDataSet(Dataset):
@@ -42,7 +46,7 @@ class FrankenSteinDataSet(Dataset):
         BACKGROUND_VOLUME_RANGE = 0.1
         TIME_SHIFT_MS = 100
 
-        DATA_URL = 'https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz'
+        DATA_URL = None #'https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz'
         DATASET_DIR =  '../data/SpeechCommands/speech_commands_v0.02/'
         LOGS_DIR = 'logs/'
 
@@ -90,18 +94,24 @@ class FrankenSteinDataSet(Dataset):
         return self._data[idx], self._labels[idx]
 
 
-# def main():
-#     dataset = FrankenSteinDataSet("training")
-#     loader = DataLoader(dataset, batch_size=8, shuffle=True)
+def main():
+    BS = 8
+    dataset = FrankenSteinDataSet("training")
+    loader = DataLoader(dataset, batch_size=BS, shuffle=True)
 
-#     for data, label in loader:
-#         print(f"dtype of data is {type(data)}")
-#         print(f"shape of data is {data.shape}")
-#         print(f"data looks like this: {data}")
+    for data, label in loader:
+        print(f"dtype of data is {type(data)}")
+        print(f"shape of data is {data.shape}")
+        print(f"data looks like this: {data}")
+        
+        _4dfingerprint = data.reshape(BS, 49, 40, 1)
+        # tf.reshape(test_data[0], [-1, input_time_size, input_frequency_size, 1])
 
-#         break
+        print(f"The 4d fingerprint has the following shape: {_4dfingerprint.shape}")
 
-#     logger.info("DONE")
+        break
 
-# if __name__ == "__main__":
-#     main()
+    logger.info("DONE")
+
+if __name__ == "__main__":
+    main()
